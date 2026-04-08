@@ -1,0 +1,422 @@
+/* css/styles.css — Engineering Graphics App Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #0d0f14;
+  --bg2:        #13161e;
+  --bg3:        #1a1e2a;
+  --surface:    #1e2333;
+  --surface2:   #252a3a;
+  --border:     #2e3449;
+  --accent:     #4361EE;
+  --accent2:    #7895FF;
+  --accent-glow:rgba(67,97,238,0.25);
+  --red:        #E63946;
+  --green:      #06d6a0;
+  --text:       #e8eaf0;
+  --text2:      #8b91a8;
+  --text3:      #545972;
+  --white:      #ffffff;
+  --sketch-bg:  #fafaf8;
+  --sketch-line:#c8ccd8;
+  --radius:     14px;
+  --radius-sm:  8px;
+  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+  --shadow:     0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 48px rgba(0,0,0,0.6);
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Screen System ────────────────────────────────────────────────────────── */
+#app { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+.screen {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transform: translateY(16px);
+  transition: opacity var(--transition), transform var(--transition);
+}
+.screen.active {
+  opacity: 1; pointer-events: all; transform: none;
+}
+
+/* ── Landing Screen ───────────────────────────────────────────────────────── */
+#screen-landing {
+  background: radial-gradient(ellipse at 60% 30%, #1b2340 0%, var(--bg) 70%);
+}
+
+.landing-header {
+  text-align: center; margin-bottom: 52px;
+}
+.landing-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--white) 30%, var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.landing-header p {
+  margin-top: 10px; color: var(--text2);
+  font-size: clamp(0.85rem, 1.5vw, 1rem); font-weight: 400;
+}
+
+.module-grid {
+  display: flex; gap: 18px; flex-wrap: wrap; justify-content: center;
+  max-width: 900px;
+}
+
+.module-card {
+  position: relative; cursor: pointer;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  width: 160px; text-align: center;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  user-select: none;
+}
+.module-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 0 24px var(--accent-glow), var(--shadow);
+}
+.module-card.active-module {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--surface2), #1d2540);
+  box-shadow: 0 0 32px var(--accent-glow);
+}
+.module-card.active-module:hover { transform: translateY(-6px) scale(1.03); }
+
+.module-number {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--text3); margin-bottom: 10px; text-transform: uppercase;
+}
+.module-icon { font-size: 2rem; margin-bottom: 10px; }
+.module-title {
+  font-size: 0.95rem; font-weight: 600; color: var(--text);
+}
+.module-coming-soon {
+  margin-top: 6px; font-size: 0.7rem; color: var(--text3);
+  font-style: italic;
+}
+
+/* Active (Solids) card glow pulse */
+.module-card.active-module::before {
+  content: '';
+  position: absolute; inset: -1.5px; border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  z-index: -1; opacity: 0.5;
+  animation: borderPulse 2.5s ease-in-out infinite;
+}
+@keyframes borderPulse { 0%,100%{opacity:0.3} 50%{opacity:0.7} }
+
+/* ── Shape Type Screen ────────────────────────────────────────────────────── */
+#screen-shape-type, #screen-base-shape {
+  background: radial-gradient(ellipse at 40% 60%, #151b30 0%, var(--bg) 70%);
+}
+
+.sub-screen-header {
+  text-align: center; margin-bottom: 48px;
+}
+.sub-screen-header h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.02em;
+  color: var(--text);
+}
+.sub-screen-header p { margin-top: 8px; color: var(--text2); font-size: 0.9rem; }
+
+.choice-grid {
+  display: flex; gap: 28px; flex-wrap: wrap; justify-content: center;
+}
+
+.choice-card {
+  cursor: pointer;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 36px 48px; text-align: center; width: 240px;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+.choice-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  border-color: var(--accent);
+  box-shadow: 0 0 32px var(--accent-glow), var(--shadow-lg);
+}
+.choice-icon { font-size: 3.5rem; margin-bottom: 16px; }
+.choice-label { font-size: 1.2rem; font-weight: 700; }
+.choice-sub   { margin-top: 6px; color: var(--text2); font-size: 0.82rem; }
+
+/* ── Base Shape Grid ──────────────────────────────────────────────────────── */
+#base-shape-grid {
+  display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+  max-width: 820px;
+}
+
+.base-shape-card {
+  cursor: pointer;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px; text-align: center; width: 145px;
+  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+.base-shape-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+.base-shape-icon  { font-size: 2.4rem; margin-bottom: 10px; }
+.base-shape-label { font-size: 0.95rem; font-weight: 600; }
+.base-shape-sub   { margin-top: 4px; color: var(--text2); font-size: 0.72rem; }
+
+/* ── Buttons (back/nav) ───────────────────────────────────────────────────── */
+.btn-back {
+  position: absolute; top: 24px; left: 24px;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text2); font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; font-weight: 500;
+  padding: 8px 18px; border-radius: 99px; cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.btn-back:hover { background: var(--surface); color: var(--text); }
+
+/* ── Viewer Screen ────────────────────────────────────────────────────────── */
+#screen-viewer {
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start; /* override center inherited from .screen */
+  overflow: hidden;
+  background: var(--white);
+}
+
+/* 3D Canvas fills left area */
+#canvas-3d {
+  flex: 1 1 0;
+  min-width: 0; /* prevent canvas from forcing parent to overflow */
+  display: block;
+  background: var(--white);
+}
+
+/* Parameter panel (right sidebar) */
+#param-panel {
+  width: 280px;
+  min-width: 260px;
+  max-width: 300px;
+  flex-shrink: 0; /* never compress the sidebar */
+  background: var(--bg2);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 0; overflow-y: auto;
+}
+
+.param-panel-header {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.param-panel-header h3 {
+  font-size: 1rem; font-weight: 700; color: var(--text);
+}
+.param-shape-tag {
+  margin-top: 6px;
+  display: inline-block;
+  background: var(--accent-glow); color: var(--accent2);
+  border: 1px solid var(--accent);
+  border-radius: 99px; padding: 2px 12px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+}
+
+.param-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.param-section-title {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--text3);
+  margin-bottom: 14px;
+}
+
+.param-row { margin-bottom: 16px; }
+.param-row:last-child { margin-bottom: 0; }
+.param-label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.82rem; color: var(--text2); margin-bottom: 6px;
+}
+.param-label span:last-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem; color: var(--accent2); font-weight: 500;
+}
+
+input[type=range] {
+  width: 100%; appearance: none; -webkit-appearance: none;
+  height: 4px; border-radius: 2px;
+  background: var(--border); outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); cursor: pointer;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  transition: background var(--transition), transform 0.1s;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  background: var(--accent2); transform: scale(1.2);
+}
+
+/* Toggle view button */
+#btn-toggle-view {
+  margin: 20px;
+  background: linear-gradient(135deg, var(--accent), #5e78f0);
+  border: none; border-radius: 10px;
+  color: white; font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  padding: 12px 16px; cursor: pointer;
+  transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 16px var(--accent-glow);
+  letter-spacing: 0.01em; text-align: center;
+}
+#btn-toggle-view:hover {
+  opacity: 0.9; transform: translateY(-2px);
+  box-shadow: 0 6px 24px var(--accent-glow);
+}
+
+/* ── Sketchbook Overlay ───────────────────────────────────────────────────── */
+#sketchbook-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  background: var(--sketch-bg);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+#sketchbook-overlay.visible { opacity: 1; pointer-events: all; }
+
+/* Grid paper texture for sketchbook */
+#sketchbook-overlay::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--sketch-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sketch-line) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+#sketchbook-svg {
+  flex: 1; width: 100%; height: 100%;
+  position: relative; z-index: 1;
+}
+
+/* Sketchbook toolbar */
+#sketchbook-toolbar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 24px;
+  background: rgba(250,250,248,0.95);
+  border-top: 1px solid #dde1ee;
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+#step-counter {
+  flex: 1;
+  font-size: 0.88rem; font-weight: 500; color: #3a4060;
+  font-family: 'Inter', sans-serif;
+}
+
+.step-btn {
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem; font-weight: 600;
+  padding: 9px 18px; cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+.step-btn:hover:not(:disabled) { background: var(--surface2); border-color: var(--accent); }
+.step-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.step-btn.primary {
+  background: linear-gradient(135deg, var(--accent), #5e78f0);
+  border-color: transparent; color: white;
+  box-shadow: 0 2px 10px var(--accent-glow);
+}
+.step-btn.primary:hover:not(:disabled) { opacity: 0.9; }
+
+#btn-toggle-view-sketch {
+  background: var(--surface); color: var(--text2);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem; font-weight: 500; cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+#btn-toggle-view-sketch:hover { background: var(--surface2); color: var(--text); }
+
+/* ── Coming Soon Modal ────────────────────────────────────────────────────── */
+#modal-coming-soon {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+#modal-coming-soon.visible { opacity: 1; pointer-events: all; }
+
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 40px 48px; text-align: center;
+  max-width: 380px;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.95);
+  transition: transform 0.2s;
+}
+#modal-coming-soon.visible .modal-box { transform: scale(1); }
+
+.modal-emoji { font-size: 3rem; margin-bottom: 16px; }
+.modal-box h3 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+.modal-box p  { color: var(--text2); font-size: 0.9rem; line-height: 1.6; }
+
+#modal-close {
+  margin-top: 24px;
+  background: var(--accent); color: white;
+  border: none; border-radius: 8px;
+  padding: 10px 28px; font-family: 'Inter', sans-serif;
+  font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  transition: opacity var(--transition);
+}
+#modal-close:hover { opacity: 0.85; }
+
+/* ── Animations ───────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.screen.active .module-card,
+.screen.active .choice-card,
+.screen.active .base-shape-card {
+  animation: fadeUp 0.35s ease both;
+}
+.screen.active .module-card:nth-child(1) { animation-delay: 0.05s; }
+.screen.active .module-card:nth-child(2) { animation-delay: 0.10s; }
+.screen.active .module-card:nth-child(3) { animation-delay: 0.15s; }
+.screen.active .module-card:nth-child(4) { animation-delay: 0.20s; }
+.screen.active .module-card:nth-child(5) { animation-delay: 0.25s; }
+
+.screen.active .base-shape-card:nth-child(1) { animation-delay: 0.05s; }
+.screen.active .base-shape-card:nth-child(2) { animation-delay: 0.10s; }
+.screen.active .base-shape-card:nth-child(3) { animation-delay: 0.15s; }
+.screen.active .base-shape-card:nth-child(4) { animation-delay: 0.20s; }
+.screen.active .base-shape-card:nth-child(5) { animation-delay: 0.25s; }

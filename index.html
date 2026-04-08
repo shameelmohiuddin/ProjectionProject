@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EngGraph — Interactive Projection of Solids</title>
+  <meta name="description" content="Interactive step-by-step tool for learning orthographic projection of solids in engineering graphics (VTU). Visualise pyramids and prisms in 3D and sketchbook views." />
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Three.js import map -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three":           "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/":   "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCREEN 1 — Landing
+  ═══════════════════════════════════════════════════════ -->
+  <div id="screen-landing" class="screen active">
+    <div class="landing-header">
+      <h1>Engineering Graphics</h1>
+      <p>Interactive Projection Learning Tool &nbsp;·&nbsp; VTU 23ESCC105</p>
+    </div>
+
+    <div class="module-grid">
+
+      <div class="module-card" id="card-points" data-module="points">
+        <div class="module-number">Module 1</div>
+        <div class="module-icon">·</div>
+        <div class="module-title">Points</div>
+        <div class="module-coming-soon">Coming soon</div>
+      </div>
+
+      <div class="module-card" id="card-lines" data-module="lines">
+        <div class="module-number">Module 2</div>
+        <div class="module-icon">╱</div>
+        <div class="module-title">Lines</div>
+        <div class="module-coming-soon">Coming soon</div>
+      </div>
+
+      <div class="module-card active-module" id="card-solids" data-module="solids">
+        <div class="module-number">Module 3</div>
+        <div class="module-icon">◈</div>
+        <div class="module-title">Solids</div>
+      </div>
+
+      <div class="module-card" id="card-lateral" data-module="lateral">
+        <div class="module-number">Module 4</div>
+        <div class="module-icon">⊡</div>
+        <div class="module-title">Lateral View</div>
+        <div class="module-coming-soon">Coming soon</div>
+      </div>
+
+      <div class="module-card" id="card-isometric" data-module="isometric">
+        <div class="module-number">Module 5</div>
+        <div class="module-icon">⬡</div>
+        <div class="module-title">Isometric</div>
+        <div class="module-coming-soon">Coming soon</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCREEN 2 — Shape Type (Pyramid / Prism)
+  ═══════════════════════════════════════════════════════ -->
+  <div id="screen-shape-type" class="screen">
+    <button class="btn-back" id="btn-back-shape-type">← Back</button>
+
+    <div class="sub-screen-header">
+      <h2>Choose Solid Type</h2>
+      <p>Select the family of solid you want to explore</p>
+    </div>
+
+    <div class="choice-grid">
+      <div class="choice-card" id="card-pyramid" data-shape-type="pyramid">
+        <div class="choice-icon">🔺</div>
+        <div class="choice-label">Pyramid</div>
+        <div class="choice-sub">Converges to an apex</div>
+      </div>
+      <div class="choice-card" id="card-prism" data-shape-type="prism">
+        <div class="choice-icon">🧱</div>
+        <div class="choice-label">Prism</div>
+        <div class="choice-sub">Uniform cross-section</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCREEN 3 — Base Shape selection
+  ═══════════════════════════════════════════════════════ -->
+  <div id="screen-base-shape" class="screen">
+    <button class="btn-back" id="btn-back-base-shape">← Back</button>
+
+    <div class="sub-screen-header">
+      <h2 id="base-shape-title">Choose Base Shape</h2>
+      <p>Select the polygon that forms the base of the solid</p>
+    </div>
+
+    <div id="base-shape-grid">
+      <!-- Populated dynamically by app.js -->
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       SCREEN 4 — Viewer (3D canvas + param panel)
+  ═══════════════════════════════════════════════════════ -->
+  <div id="screen-viewer" class="screen">
+
+    <!-- 3D canvas -->
+    <canvas id="canvas-3d"></canvas>
+
+    <!-- Parameter sidebar -->
+    <div id="param-panel">
+      <button class="btn-back" id="btn-back-viewer" style="position:relative;top:0;left:0;margin:16px 16px 0;">← Back</button>
+
+      <div class="param-panel-header">
+        <h3>Solid Parameters</h3>
+        <div class="param-shape-tag" id="shape-tag">Square Pyramid</div>
+      </div>
+
+      <div class="param-section">
+        <div class="param-section-title">Dimensions</div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Side Length (a)</span>
+            <span id="val-side">35 mm</span>
+          </div>
+          <input type="range" id="sl-side" min="20" max="80" step="1" value="35" />
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Resting on (HP)</span>
+          </div>
+          <select id="sl-rest-type" style="width:100%; padding: 6px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 4px; font-family: 'Inter', sans-serif; cursor: pointer; outline: none; margin-bottom: 12px;">
+            <option value="edge">Edge</option>
+            <option value="corner">Corner</option>
+          </select>
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Base Rotation Offset</span>
+            <span id="val-base-rot">0°</span>
+          </div>
+          <input type="range" id="sl-base-rot" min="-90" max="90" step="1" value="0" />
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Height</span>
+            <span id="val-height">60 mm</span>
+          </div>
+          <input type="range" id="sl-height" min="15" max="110" step="1" value="60" />
+        </div>
+      </div>
+
+      <div class="param-section">
+        <div class="param-section-title">Orientation</div>
+
+        <div class="param-row">
+          <div class="param-label" style="align-items: center;">
+            <span>Tilt relative to HP</span>
+            <div>
+              <button id="btn-sleep" style="padding: 3px 8px; font-size: 0.7rem; font-weight: 600; border-radius: 4px; background: var(--border); color: var(--text); border: none; cursor: pointer; margin-right: 8px;">Sleep</button>
+              <span id="val-incl-hp">45°</span>
+            </div>
+          </div>
+          <input type="range" id="sl-incl-hp" min="-90" max="90" step="1" value="45" />
+        </div>
+
+        <div class="param-row">
+          <div class="param-label">
+            <span>Apparent incl. to VP</span>
+            <span id="val-appr-vp">45°</span>
+          </div>
+          <input type="range" id="sl-appr-vp" min="-90" max="90" step="1" value="45" />
+        </div>
+      </div>
+
+      <div style="padding: 14px 20px; border-bottom: 1px solid var(--border);">
+        <div class="param-section-title" style="margin-bottom:10px;">Legend</div>
+        <div style="font-size:0.75rem;color:var(--text2);line-height:2;font-family:'JetBrains Mono',monospace;">
+          <div>—— visible edge</div>
+          <div style="letter-spacing:0.15em;">- - - hidden edge</div>
+          <div style="letter-spacing:0.06em;">—— — axis line</div>
+        </div>
+      </div>
+
+      <button id="btn-toggle-view">Switch to Sketchbook View</button>
+    </div>
+
+
+    <!-- ── Sketchbook overlay (lives inside #screen-viewer) ── -->
+    <div id="sketchbook-overlay">
+      <svg id="sketchbook-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+
+      <div id="sketchbook-toolbar">
+        <button class="step-btn" id="btn-prev-step" disabled>← Prev</button>
+        <span id="step-counter">Start — press Next Step to begin</span>
+        <button class="step-btn primary" id="btn-next-step">Next Step →</button>
+        <button id="btn-toggle-view-sketch">Switch to 360° View</button>
+      </div>
+    </div>
+
+  </div><!-- end #screen-viewer -->
+
+</div><!-- end #app -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     Coming Soon Modal
+═══════════════════════════════════════════════════════ -->
+<div id="modal-coming-soon" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-emoji">🚧</div>
+    <h3 id="modal-module-name">Module</h3>
+    <p>This module is coming soon.<br>For now, explore <strong>Solids</strong> to see step-by-step orthographic projections.</p>
+    <button id="modal-close">Got it</button>
+  </div>
+</div>
+
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
