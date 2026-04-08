@@ -31,7 +31,7 @@
 }
 
 html, body {
-  width: 100%; height: 100%; overflow: hidden;
+  width: 100%; height: 100vh; height: 100dvh; overflow: hidden;
   font-family: 'Inter', sans-serif;
   background: var(--bg);
   color: var(--text);
@@ -39,7 +39,7 @@ html, body {
 }
 
 /* ── Screen System ────────────────────────────────────────────────────────── */
-#app { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+#app { width: 100vw; height: 100vh; height: 100dvh; position: relative; overflow: hidden; }
 
 .screen {
   position: absolute; inset: 0;
@@ -221,6 +221,20 @@ html, body {
   padding: 0; overflow-y: auto;
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  #screen-viewer {
+    flex-direction: column !important;
+  }
+  #param-panel {
+    width: 100%;
+    max-width: none;
+    height: 48%; /* Bottom half for parameters so canvas gets top */
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}
+
 .param-panel-header {
   padding: 20px 20px 14px;
   border-bottom: 1px solid var(--border);
@@ -322,7 +336,7 @@ input[type=range]::-webkit-slider-thumb:hover {
 /* Sketchbook toolbar */
 #sketchbook-toolbar {
   position: absolute; bottom: 0; left: 0; right: 0;
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;
   padding: 14px 24px;
   background: rgba(250,250,248,0.95);
   border-top: 1px solid #dde1ee;
@@ -331,9 +345,23 @@ input[type=range]::-webkit-slider-thumb:hover {
 }
 
 #step-counter {
-  flex: 1;
+  flex: 1; /* Desktop: take up center space pushing buttons to edges */
+  text-align: center;
   font-size: 0.88rem; font-weight: 500; color: #3a4060;
   font-family: 'Inter', sans-serif;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+  #sketchbook-toolbar {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  #step-counter {
+    flex: 1 1 100%; /* Mobile: take its own row */
+    order: -1; /* Move the counter to the top row */
+    margin-bottom: 4px;
+  }
 }
 
 .step-btn {
