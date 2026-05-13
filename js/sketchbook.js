@@ -225,12 +225,12 @@ export function renderStep(step, params) {
   // ── Labels ───────────────────────────────────────────────────────────────────
   const LINFO = [
     null,
-    { col: COL[0], y: XY_Y + GAP_T + maxTV * SCALE + 30, text: '④ Top View — Initial' },
-    { col: COL[0], y: XY_Y - maxFV * SCALE - 14,         text: '① Front View — Initial' },
-    { col: COL[1], y: XY_Y - maxFV * SCALE - 14,         text: '② Front View — Tilted' },
-    { col: COL[1], y: XY_Y + GAP_T + maxTV * SCALE + 30, text: '⑤ Top View — Tilted' },
-    { col: COL[2], y: XY_Y + GAP_T + maxTV * SCALE + 30, text: '⑥ Final Top View' },
-    { col: COL[2], y: XY_Y - maxFV * SCALE - 14,         text: '③ Final Front View ✓', bold: true },
+    { col: COL[0], y: XY_Y + GAP_T + maxTV * SCALE + 30, text: '① Top View — Initial' },
+    { col: COL[0], y: XY_Y - maxFV * SCALE - 14,         text: '② Front View — Initial' },
+    { col: COL[1], y: XY_Y - maxFV * SCALE - 14,         text: '③ Front View — Tilted' },
+    { col: COL[1], y: XY_Y + GAP_T + maxTV * SCALE + 30, text: '④ Top View — Tilted' },
+    { col: COL[2], y: XY_Y + GAP_T + maxTV * SCALE + 30, text: '⑤ Final Top View' },
+    { col: COL[2], y: XY_Y - maxFV * SCALE - 14,         text: '⑥ Final Front View ✓', bold: true },
   ];
   const gL = mk('g');
   for (let s = 1; s <= step; s++) {
